@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Production build
+frontend/dist/
+
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# Environment files
+.env
+.env.local
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Database (optional - keep seed db tracked if desired, or exclude local sqlite copies)
+# backend/database/army_faq.db

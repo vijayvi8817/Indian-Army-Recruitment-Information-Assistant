@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  chatbot-assistant:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: indian_army_faq_chatbot
+    ports:
+      - "8005:8005"
+    environment:
+      - PORT=8005
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - ADMIN_KEY=${ADMIN_KEY:-admin123}
+    volumes:
+      - ./backend/database:/app/backend/database
+      - ./data:/app/data
+    restart: unless-stopped
