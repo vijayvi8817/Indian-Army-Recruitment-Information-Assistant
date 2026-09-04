@@ -3,6 +3,7 @@ import sys
 from fastapi import FastAPI, UploadFile, File, Header, HTTPException, Query, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel
 from typing import Optional, Dict, Any, List
 
@@ -43,6 +44,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+FRONTEND_DIST = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "dist")
 ADMIN_KEY = os.getenv("ADMIN_KEY", "admin123")
 
 def verify_admin_key(x_admin_key: Optional[str] = Header(None)):
@@ -109,6 +111,17 @@ def read_root():
         "status": "RUNNING",
         "disclaimer": "This chatbot is an information-assistance tool and is NOT an official Indian Army website."
     }
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    if os.path.exists(FRONTEND_DIST):
+        ico_path = os.path.join(FRONTEND_DIST, "favicon.ico")
+        if os.path.exists(ico_path):
+            return FileResponse(ico_path)
+        svg_path = os.path.join(FRONTEND_DIST, "favicon.svg")
+        if os.path.exists(svg_path):
+            return FileResponse(svg_path, media_type="image/svg+xml")
+    return Response(status_code=204)
 
 @app.post("/api/chat")
 def chat_endpoint(req: ChatQueryRequest):
@@ -254,7 +267,6 @@ def run_evaluation_suite():
     return evaluation_service.run_evaluation()
 
 # Mount static frontend build files if dist directory exists
-FRONTEND_DIST = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "dist")
 if os.path.exists(FRONTEND_DIST):
     assets_dir = os.path.join(FRONTEND_DIST, "assets")
     if os.path.exists(assets_dir):
