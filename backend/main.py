@@ -104,7 +104,7 @@ class DuplicateCheckModel(BaseModel):
 
 # ===================== PUBLIC ENDPOINTS =====================
 
-@app.get("/")
+@app.get("/api/status")
 def read_root():
     return {
         "system": "Indian Army Recruitment Information Assistant API",
